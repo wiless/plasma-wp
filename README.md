@@ -19,15 +19,20 @@ Project is still under development and in an unusable stage. **Not recommended**
 Build
 -------
 Download the source ( or clone it)
+<pre>
 
-$cd plasma-wp
-$mkdir build
-$cd build
-$cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
-$make install
+cd plasma-wp
+  
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+make install`
+</pre>
 
 Test
 ------
-$kquitapp desktop-plasma
+`kquitapp desktop-plasma`
+
 (after the desktop-plasma stops, start desktop-plasma again)
-$desktop-plasma
+
+`desktop-plasma`
