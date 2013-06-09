@@ -210,6 +210,8 @@ void PlasmaWp::init(const KConfigGroup &config)
   if(settingwidget==NULL)
     {
       settingwidget=new MySettings;
+      settingwidget->desktopSize=boundingRect();
+      
         connect(settingwidget,SIGNAL(settingsChanged()),this,SLOT(settingsModified()));
 
     }

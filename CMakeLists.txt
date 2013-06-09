@@ -22,7 +22,7 @@ target_link_libraries(plasma_wallpaper_plasma-wp ${KDE4_PLASMA_LIBS} )
 
 
 add_executable(main.run main.cpp mysettings.cpp ${HEADERS_MOC} ${HEADERS_UI})
-target_link_libraries(main.run ${QT_LIBRARIES} ${KDE4_PLASMA_LIBS})
+target_link_libraries(main.run ${QT_LIBRARIES} ${KDE4_PLASMA_LIBS} itpp)
  
 install(TARGETS plasma_wallpaper_plasma-wp DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES plasma-wallpaper-plasma-wp.desktop DESTINATION ${SERVICES_INSTALL_DIR})
