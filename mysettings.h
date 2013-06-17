@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <KConfigGroup>
 #include <QPicture>
+#include <QSettings>
 namespace Ui {
   class MySettings;
 }
@@ -13,9 +14,19 @@ class MySettings : public QWidget
   Q_OBJECT
 public:
   KConfigGroup grp;
+  QSettings *mysetting;
   QRectF desktopSize;
-  bool scale;
+  int stretchType;
+  int scaleFactor;
   QPoint offset;
+  QString pvsFname;
+
+
+  bool scale;
+
+
+   QPixmap pmap;
+
 public:
   explicit MySettings(QWidget *parent = 0);
   void setConfig(KConfigGroup config);
@@ -34,10 +45,28 @@ private slots:
   void on_horizontalScrollBar_valueChanged(int value);
 
   void on_verticalScrollBar_valueChanged(int value);
-  void scroll();
-  void on_checkBox_clicked();
 
-  void on_lineEdit_returnPressed();
+
+    void init();
+
+    void on_pushButton_clicked();
+    void applyScale();
+    void applyScroll();
+    void loadImage();
+
+    void on_radioButton_4_clicked();
+
+    void on_radioButton_3_clicked();
+
+    void on_radioButton_2_clicked();
+
+    void on_radioButton_clicked();
+
+    void on_lineEdit_editingFinished();
+
+    void on_lineEdit_textChanged(const QString &arg1);
+
+    void on_pushButton_2_clicked();
 
 signals:
   void settingsChanged();

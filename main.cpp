@@ -16,8 +16,8 @@ int main(int argn,char *argc[])
   QApplication app(argn,argc);
   QDialog *dlg=new QDialog;
   QHBoxLayout *hlayout=new QHBoxLayout(dlg);
-//  dlg->setFixedWidth (700);
-//  dlg->setFixedHeight (700);
+   dlg->setFixedWidth (700);
+   dlg->setFixedHeight (700);
 
   
   MySettings window;

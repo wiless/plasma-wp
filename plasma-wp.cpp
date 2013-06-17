@@ -7,6 +7,7 @@
 PlasmaWp::PlasmaWp(QObject *parent, const QVariantList &args)
         : Plasma::Wallpaper(parent, args)
 {
+
         fontsize=1;
 
         image=KUrl("/home/ssk/.face");
@@ -88,7 +89,7 @@ void PlasmaWp::updateSettings()
         connect(settingwidget,SIGNAL(settingsChanged()),this,SLOT(settingsModified()));
     }
 
-  settingwidget->setScaleOffset(offset,scale);
+
   emit update (boundingRect ());
 
 }
