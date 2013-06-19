@@ -15,9 +15,10 @@ MySettings::MySettings(QWidget *parent) :
  // ui->lineEdit->setText (grp.readEntry("textString", QString("")));
 // ui->desktop->move (0,0);
 // scale=true;
-  mysetting=new QSettings("wilessbytes", "plasma-wp");
+  mysetting=new QSettings("wilessbytes", "plasma-wp",this);
+
 offset=QPoint(0,0);
-scaleFactor=200;
+scaleFactor=100;
 stretchType=0;
 init();
 
@@ -26,11 +27,12 @@ init();
 void MySettings::init()
 {
 
-  pvsFname=mysetting->value ("ImageSource").toString ();
+ pvsFname=mysetting->value ("ImageSource").toString ();
   scaleFactor=mysetting->value ("scaleFactor").toInt ();
   stretchType=mysetting->value ("stretchType").toInt ();
   offset=mysetting->value ("offset").toPoint ();
   bool rotated=mysetting->value ("rotated").toBool ();
+
   if(rotated) ui->checkBox->setChecked (true);
   /// set radiobuttons
   if(stretchType==0) ui->radioButton->setChecked (true);
@@ -75,10 +77,12 @@ void MySettings::setConfig(KConfigGroup config)
 
 
 MySettings::~MySettings()
-{
-  offset=QPoint(ui->horizontalScrollBar->value (),ui->verticalScrollBar->value ());
+{ offset=QPoint(ui->horizontalScrollBar->value (),ui->verticalScrollBar->value ());
   scaleFactor=ui->horizontalSlider->value ();
 
+  qWarning ("DE scale %d, offset %d %d",scaleFactor,offset.x (),offset.y ());
+ mysetting->setValue ("ImageSource",ui->lineEdit->text ());
+  qWarning (qPrintable(mysetting->fileName ()));
        mysetting->setValue ("rotated",ui->checkBox->isChecked ());
 
   mysetting->setValue ("stretchType",stretchType);
@@ -86,7 +90,7 @@ MySettings::~MySettings()
     mysetting->setValue ("scaleFactor",scaleFactor);
     qWarning ("Saved all before closing");
 
-    qWarning ("scale %d, offset %d %d",scaleFactor,offset.x (),offset.y ());
+    qWarning ("DE scale %d, offset %d %d",scaleFactor,offset.x (),offset.y ());
 
   delete ui;
 }
@@ -243,7 +247,7 @@ void MySettings::applyScroll()
 void MySettings::loadImage( )
 {
   QString fname=ui->lineEdit->text ();
-//  /home/ssk/.newpics/wp/28062-amisha-patel.jpg
+
   pmap.load (fname);
   QFileInfo finfo(fname);
   if(!finfo.isFile ()) return;
@@ -251,7 +255,7 @@ void MySettings::loadImage( )
   ui->verticalScrollBar->setMaximum (pmap.height());
   ui->horizontalScrollBar->setValue (offset.x ());
   ui->verticalScrollBar->setValue (offset.y ());
-  mysetting->setValue ("ImageSource",fname);
+//  mysetting->setValue ("ImageSource",fname);
 
   if(ui->checkBox->isChecked ())
       {
