@@ -17,12 +17,21 @@ set(plasma-wp_SRCS plasma-wp.cpp mysettings.cpp)
 
 
 kde4_add_ui_files(plasma-wp_SRCS mysettings.ui)
-kde4_add_plugin(plasma_wallpaper_plasma-wp ${plasma-wp_SRCS} )
-target_link_libraries(plasma_wallpaper_plasma-wp ${KDE4_PLASMA_LIBS} )
+kde4_add_plugin(plasma_wallpaper-extra ${plasma-wp_SRCS} )
+target_link_libraries(plasma_wallpaper-extra ${KDE4_PLASMA_LIBS} )
 
 
 add_executable(main.run main.cpp mysettings.cpp ${HEADERS_MOC} ${HEADERS_UI})
 target_link_libraries(main.run ${QT_LIBRARIES} ${KDE4_PLASMA_LIBS} itpp)
  
-install(TARGETS plasma_wallpaper_plasma-wp DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES plasma-wallpaper-plasma-wp.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS plasma_wallpaper-extra DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES plasma-wallpaper-extra.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+
+
+
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Wiless Bytes") #required
+SET(CPACK_PACKAGE_VENDOR "github.com/wiless")
+ 
+INCLUDE(CPack)
+ 

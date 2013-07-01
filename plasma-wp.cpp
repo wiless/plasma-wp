@@ -4,17 +4,27 @@
 #include "plasma-wp.h"
 #include <QAction>
 #include <mysettings.h>
+#include <QFileInfo>
+
 PlasmaWp::PlasmaWp(QObject *parent, const QVariantList &args)
         : Plasma::Wallpaper(parent, args)
 {
 
         fontsize=1;
-
-        image=KUrl("/home/ssk/.face");
+	mysetting=new QSettings("wilessbytes", "plasma-wp",this);
+	
+	pvsFname=mysetting->value ("ImageSource").toString ();
+	scaleFactor=mysetting->value ("scaleFactor").toInt ();
+	stretchType=mysetting->value ("stretchType").toInt ();
+	offset=mysetting->value ("offset").toPoint ();
+	rotated=mysetting->value ("rotated").toBool ();
+	
+	
+        image=KUrl(pvsFname);
 //	if ( image.isLocalFile() )
 	txt=image.toLocalFile (); //"Hello World";
 	scale=1;
-	offset=QPointF(0,0);
+	offset=QPoint(0,0);
 	origimg=QImage(image.toLocalFile ());
 	 img = QImage(image.toLocalFile ());
 	connect(this,SIGNAL(Wallpaper::urlDropped(KUrl)),this,SLOT(showImage(KUrl)));
@@ -36,7 +46,7 @@ void PlasmaWp::showImage(const KUrl &url)
     origimg = QImage(image.toLocalFile ());
     txt=image.toLocalFile (); //"Hello World";
     scale=1;
-    offset=QPointF(0,0);
+    offset=QPoint(0,0);
 //    int ret = QMessageBox::warning(0, tr("My Application"),
 //                                   tr("The document has been modified.\n"
 //                                      "Do you want to save your changes?"),
@@ -59,7 +69,7 @@ void PlasmaWp::addUrls (const KUrl::List &urls)
            foreach (const KUrl &url, urls) {
                settingwidget->appendUrl(url.toLocalFile ());
                scale=1;
-               offset=QPointF(0,0);
+               offset=QPoint(0,0);
 //                 showImage (url);
              }
 
@@ -137,7 +147,7 @@ void PlasmaWp::paint(QPainter *painter, const QRectF& exposedRect)
     painter->setPen(Qt::blue);
     painter->setFont(QFont("Arial", 10));
 
-QPointF zeros(0,0);
+  QPointF zeros(0,0);
     if(scale!=1)
       {
         img=origimg.scaled (origimg.width ()*scale,origimg.height()*scale);
@@ -184,7 +194,7 @@ void PlasmaWp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
      txt="Move";
       offset=event->screenPos ();
-      offset=QPointF(500,500);
+      offset=QPoint(500,500);
     //  offset=(event->lastPos ()-event->pos ());
 
 
@@ -194,8 +204,9 @@ Wallpaper::mouseMoveEvent (event);
 }
 
 void PlasmaWp::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{  offset=event->screenPos ();
-   offset=QPointF(100,100);
+{ 
+	offset=event->screenPos ();
+   offset=QPoint(100,100);
     txt="Pressed";
  //  offset=(event->lastPos ()-event->pos ());
      Wallpaper::mouseReleaseEvent (event);
@@ -218,7 +229,7 @@ void PlasmaWp::init(const KConfigGroup &config)
     }
      settingwidget->setConfig (config);
      QString fname=config.readEntry("textString","");
-     offset=config.readEntry("offset",QPointF(0,0));
+     offset=config.readEntry("offset",QPoint(0,0));
      scale=config.readEntry("scale",1);
 
      if(!fname.isEmpty ())
@@ -255,5 +266,81 @@ QWidget *PlasmaWp::createConfigurationInterface(QWidget *parent)
 
   return settingwidget;
 }
+
+void PlasmaWp::applyScale()
+{
+//  rpmap=pmap.copy (ui->horizontalScrollBar->value (),ui->verticalScrollBar->value (),pmap.width ()-ui->horizontalScrollBar->value (),pmap.height ()-ui->verticalScrollBar->value ());
+
+  if(stretchType==0)
+    {
+      applyScroll ();
+      return;
+    }
+
+
+  QSize sz;
+  sz.setHeight (boundingRect ().height ());
+  sz.setWidth (boundingRect ().width ());
+
+  if(stretchType==1)
+    rpmap=pmap.scaled (sz,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+  if(stretchType==2)
+    rpmap=pmap.scaled (sz,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+  if(stretchType==3)
+    rpmap=pmap.scaled (sz,Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
+
+
+//  ui->lblPreview->setPixmap (rpmap);
+}
+
+
+void PlasmaWp::applyScroll()
+{
+
+//  QPixmap rpmap;
+//  double scale=ui->horizontalSlider->value ()/100.0;
+
+//  QPoint newoffset=QPoint(ui->horizontalScrollBar->value (),ui->verticalScrollBar->value ());
+  //  mysetting->setValue ("offset",offset);
+  //  mysetting->setValue ("scaleFactor",scaleFactor);
+  //  mysetting->setValue ("stretchType",stretchType);
+
+  QRectF rect=boundingRect ();
+  QSize sz=QSize(rect.height (),rect.width ());
+
+  rpmap=pmap.copy (offset.x (),offset.y (),rect.width ()*scale,rect.height ()*scale);
+  rpmap=rpmap.scaled (sz,Qt::KeepAspectRatio);
+
+
+
+//  ui->lblPreview->setPixmap (rpmap);
+}
+
+void PlasmaWp::loadImage( )
+{
+  QString fname=pvsFname;
+
+  pmap.load (fname);
+  QFileInfo finfo(fname);
+  if(!finfo.isFile ()) return;
+
+//  ui->horizontalScrollBar->setMaximum (pmap.width ());
+//  ui->verticalScrollBar->setMaximum (pmap.height());
+//  ui->horizontalScrollBar->setValue (offset.x ());
+//  ui->verticalScrollBar->setValue (offset.y ());
+  //  mysetting->setValue ("ImageSource",fname);
+
+  if(rotated)
+    {
+
+      QTransform tform;
+      tform.rotate (90);
+      pmap=pmap.transformed (tform);
+    }
+
+
+  applyScale ();
+}
+
 
 #include "plasma-wp.moc"

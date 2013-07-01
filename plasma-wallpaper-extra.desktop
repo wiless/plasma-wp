@@ -1,15 +1,15 @@
 [Desktop Entry]
-Name=Wallpaper Advanced
+Name=Wallpaper Extra
 Type=Service
 Icon=image-jpeg
 ServiceTypes=Plasma/Wallpaper
  
-X-KDE-Library=plasma_wallpaper_plasma-wp
+X-KDE-Library=plasma_wallpaper_extra
 X-KDE-PluginInfo-Author=Wiless
 X-KDE-PluginInfo-Email=
-X-KDE-PluginInfo-Name=plasma-wp
+X-KDE-PluginInfo-Name=wallpaper_extra
 X-KDE-PluginInfo-Version=0.1
-X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-KDE-PluginInfo-Website=http://github.com/wiless/plasma-wp
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true

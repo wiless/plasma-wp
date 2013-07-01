@@ -19,10 +19,20 @@ class PlasmaWp : public Plasma::Wallpaper
 	bool type;
 	QImage img;
 	QImage origimg;
-	QPointF offset;
+	 
+	
+	/// NEW approach
+	int stretchType;
+	int scaleFactor;
+	QPoint offset;
+	QString pvsFname;
+	QPixmap pmap;
+	bool rotated;
+	QPixmap rpmap;
 
 	///
 private:
+QSettings *mysetting;
       MySettings *settingwidget;
                QString textString;     // New
     public:
@@ -43,6 +53,10 @@ protected:
 public slots:
 	void showImage(const KUrl &url);
 	void addUrls (const KUrl::List &urls);
+
+	void applyScale();
+	void applyScroll();
+	void loadImage();
 protected slots:                            // New
       void settingsModified();                // New
       void updateSettings();
